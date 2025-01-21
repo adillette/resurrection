@@ -1,6 +1,7 @@
 # 다시 만드는 첫번째 파이널 프로젝트
+![Image](https://github.com/user-attachments/assets/37384ed3-d396-4c10-b184-4d30e85b0910)
 ## 25/01/21 요구사항 분석, DB 설계 ERD 작성
-
+![Image](https://github.com/user-attachments/assets/b9f7a8ec-2627-4675-a29d-7f0dd247566f)
 ### [1] 요구사항 분석
 ----
 -게시판에 필요한 기능 정리
@@ -22,6 +23,8 @@
      -대댓글 기능 가능
 
 ⓖ찜하기 기능( 좋아요 버튼 누르면 DB에 찜하기 카운트 되게)
+
+![Image](https://github.com/user-attachments/assets/50a00261-8f30-4e15-81e1-2417d1c5436f)
 ***
 ### [2] 데이터베이스 설계
 ----

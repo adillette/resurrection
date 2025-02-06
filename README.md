@@ -61,6 +61,7 @@ CRUD 기능 구현
 
 
 2.  ERD 작성
+3.  
 ![Image](https://github.com/user-attachments/assets/a0e04253-2a52-4e24-8a4e-3760951caa0d)
 
 4.  테이블 구조 설계

@@ -61,35 +61,58 @@ CRUD 기능 구현
 
 
 2.  ERD 작성
+![Image](https://github.com/user-attachments/assets/a0e04253-2a52-4e24-8a4e-3760951caa0d)
 
-3.  테이블 구조 설계
+4.  테이블 구조 설계
+   ChatSession {
+        Long sessionId PK
+        String customerId 
+        String counselorId FK
+        DateTime startTime
+        DateTime endTime
+        String sessionStatus
+    }
+    
+    ChatMessage {
+        Long messageId PK
+        Long sessionId FK
+        String senderId
+        String messageContent
+        DateTime sendTime
+        String messageType
+    }
+    
+    Counselor {
+        String counselorId PK
+        String counselorName
+        String status
+    }
+5.  도메인 객체(Entity) 설계
 
-4.  도메인 객체(Entity) 설계
+6.  테이블과 맵핑될 객체 생성
 
-5.  테이블과 맵핑될 객체 생성
+7.  DTO 클래스 설계
 
-6.  DTO 클래스 설계
+8.  DAO 계층 구형
 
-7.  DAO 계층 구형
+9.  데이터 베이스 접근 로직 구현
 
-8.  데이터 베이스 접근 로직 구현
+10.  CRUD 기능 구현
 
-9.  CRUD 기능 구현
+11.  Service 계층 구현
 
-10.  Service 계층 구현
+12.  비즈니스 로직 구형
 
-11.  비즈니스 로직 구형
+13.  트랜잭션 처리
 
-12.  트랜잭션 처리
+14.  Controller 구현
 
-13.  Controller 구현
+15.  API 엔드 포인트 정의, 요청/응답 처리
 
-14.  API 엔드 포인트 정의, 요청/응답 처리
+16.  입력값 검증
 
-15.  입력값 검증
+17.  view 구현
 
-16.  view 구현
+18.  화면 레이아웃 작성
 
-17.  화면 레이아웃 작성
-
-18.  사용자 인터페이스 구현
+19.  사용자 인터페이스 구현

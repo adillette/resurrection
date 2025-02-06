@@ -65,54 +65,73 @@ CRUD 기능 구현
 
 4.  테이블 구조 설계
    ChatSession {
+
         Long sessionId PK
-        String customerId 
+    
+        String customerId
+    
         String counselorId FK
+    
         DateTime startTime
+    
         DateTime endTime
+    
         String sessionStatus
+    
     }
+
     
     ChatMessage {
+    
         Long messageId PK
+    
         Long sessionId FK
+    
         String senderId
+    
         String messageContent
+    
         DateTime sendTime
+    
         String messageType
+    
     }
     
     Counselor {
+    
         String counselorId PK
+    
         String counselorName
+    
         String status
+    
     }
-5.  도메인 객체(Entity) 설계
+6.  도메인 객체(Entity) 설계
 
-6.  테이블과 맵핑될 객체 생성
+7.  테이블과 맵핑될 객체 생성
 
-7.  DTO 클래스 설계
+8.  DTO 클래스 설계
 
-8.  DAO 계층 구형
+9.  DAO 계층 구형
 
-9.  데이터 베이스 접근 로직 구현
+10.  데이터 베이스 접근 로직 구현
 
-10.  CRUD 기능 구현
+11.  CRUD 기능 구현
 
-11.  Service 계층 구현
+12.  Service 계층 구현
 
-12.  비즈니스 로직 구형
+13.  비즈니스 로직 구형
 
-13.  트랜잭션 처리
+14.  트랜잭션 처리
 
-14.  Controller 구현
+15.  Controller 구현
 
-15.  API 엔드 포인트 정의, 요청/응답 처리
+16.  API 엔드 포인트 정의, 요청/응답 처리
 
-16.  입력값 검증
+17.  입력값 검증
 
-17.  view 구현
+18.  view 구현
 
-18.  화면 레이아웃 작성
+19.  화면 레이아웃 작성
 
-19.  사용자 인터페이스 구현
+20.  사용자 인터페이스 구현

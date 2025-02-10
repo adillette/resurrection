@@ -133,6 +133,8 @@ CRUD 기능 구현
 
 18.  view 구현
 
-19.  화면 레이아웃 작성
+19.  ![Image](https://github.com/user-attachments/assets/7a375294-2c73-4a10-8ba6-770ad13a611f)
 
-20.  사용자 인터페이스 구현
+20.  화면 레이아웃 작성
+
+21.  사용자 인터페이스 구현

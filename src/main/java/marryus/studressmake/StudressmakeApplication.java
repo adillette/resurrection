@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StudressmakeApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(StudressmakeApplication.class, args);
 	}
 

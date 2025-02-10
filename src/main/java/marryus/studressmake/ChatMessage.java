@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "CHAT_MESSAGE")
+@Table(name = "marryus_chat_message")
 @Getter @Setter
 @NoArgsConstructor //기본자 생성
 public class ChatMessage {
@@ -19,7 +19,7 @@ public class ChatMessage {
     @ManyToOne(fetch =FetchType.LAZY )
     @JoinColumn(name="SESSION_ID")
     private ChatSession chatSession;
-
+    @Column(name ="SENDER_ID")
     private String senderId;
 
     @Lob //db에 많은양 저장하려고 설정

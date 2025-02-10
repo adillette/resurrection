@@ -8,19 +8,18 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChatSessionRepository extends JpaRepository<ChatSession,Long> {
-    //고객 ID로 채팅세션 찾기
+    // 고객 ID로 채팅세션 찾기
     List<ChatSession> findByCustomerId(String customerId);
 
-    //상담원 Id로 채팅세션 찾기
-    List<ChatSession> findByCounselorId(String counselorId);
+    // counselorId 대신 counselor로 찾기
+    List<ChatSession> findByCounselor(Counselor counselor);
 
-    //진행중인 상담 찾기
+    // 진행중인 상담 찾기
     Optional<ChatSession> findByCustomerIdAndSessionStatus(String customerId, SessionStatus status);
 
-    //특정상태의 채팅 세션 모두 찾기
+    // 특정상태의 채팅 세션 모두 찾기
     List<ChatSession> findBySessionStatus(SessionStatus status);
 
-    //특정 기간의 채팅세션 찾기
+    // 특정 기간의 채팅세션 찾기
     List<ChatSession> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
-
 }

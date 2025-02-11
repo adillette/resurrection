@@ -41,6 +41,9 @@ public class ChatController {
     public void handleMessage(ChatMessageDTO message){
         //메시지를 해당 세션의 참여자들에게 전송
         messagingTemplate.convertAndSend("/topic/chat."+ message.getSessionId(),message);
+
+
+
     }
 
     //채팅 페이지 이동

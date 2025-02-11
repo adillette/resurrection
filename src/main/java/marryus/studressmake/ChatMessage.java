@@ -1,8 +1,6 @@
 package marryus.studressmake;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +8,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "marryus_chat_message")
 @Getter @Setter
-@NoArgsConstructor //기본자 생성
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor//기본자 생성
 public class ChatMessage {
     @Id
     @GeneratedValue
@@ -30,4 +30,6 @@ public class ChatMessage {
     @Enumerated(EnumType.STRING)
     @Column(name="MESSAGE_TYPE", nullable = false)
     private MessageType messageType;
+
+
 }

@@ -8,16 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "marryus_chat_session")
+@Table(name = "MARRYUS_CHAT_SESSION")
 @Getter @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatSession {
     @Id
-    @GeneratedValue
+    @Column(name = "SESSION_ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long sessionId;
-
+    @Column(name = "CUSTOMER_ID")
     private String customerId;
 
     @ManyToOne(fetch = FetchType.LAZY)

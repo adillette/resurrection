@@ -1,16 +1,17 @@
-package marryus.studressmake;
+package marryus.studressmake.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
+import marryus.studressmake.*;
+import marryus.studressmake.repository.ChatMessageRepository;
+import marryus.studressmake.repository.ChatSessionRepository;
+import marryus.studressmake.repository.CounselorRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.DoubleStream;
 
 import static java.util.Arrays.stream;
 
@@ -20,7 +21,7 @@ import static java.util.Arrays.stream;
 @RequiredArgsConstructor
 @Slf4j
 public class ChatService {
-    private final  ChatSessionRepository chatSessionRepository;
+    private final ChatSessionRepository chatSessionRepository;
     private final CounselorRepository counselorRepository;
     private final ChatMessageRepository chatMessageRepository;
 

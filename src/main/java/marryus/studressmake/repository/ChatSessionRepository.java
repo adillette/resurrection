@@ -1,6 +1,8 @@
-package marryus.studressmake;
+package marryus.studressmake.repository;
 
-import org.hibernate.Session;
+import marryus.studressmake.ChatSession;
+import marryus.studressmake.Counselor;
+import marryus.studressmake.SessionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

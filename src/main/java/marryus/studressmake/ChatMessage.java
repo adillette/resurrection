@@ -30,6 +30,8 @@ public class ChatMessage {
     @Enumerated(EnumType.STRING)
     @Column(name="MESSAGE_TYPE", nullable = false)
     private MessageType messageType;
+    //
+
 
 
 }

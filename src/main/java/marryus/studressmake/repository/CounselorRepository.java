@@ -1,11 +1,12 @@
-package marryus.studressmake;
+package marryus.studressmake.repository;
 
+import marryus.studressmake.Counselor;
+import marryus.studressmake.CounselorStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CounselorRepository extends JpaRepository<Counselor, String> {
 

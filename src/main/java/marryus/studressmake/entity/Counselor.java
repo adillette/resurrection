@@ -1,14 +1,14 @@
-package marryus.studressmake;
+package marryus.studressmake.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import marryus.studressmake.CounselorStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.DoubleStream;
 
 @Entity
 @Table(name = "MARRYUS_COUNSELOR")

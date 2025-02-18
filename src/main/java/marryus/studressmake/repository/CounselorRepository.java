@@ -1,6 +1,6 @@
 package marryus.studressmake.repository;
 
-import marryus.studressmake.Counselor;
+import marryus.studressmake.entity.Counselor;
 import marryus.studressmake.CounselorStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

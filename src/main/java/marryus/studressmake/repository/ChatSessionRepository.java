@@ -1,7 +1,7 @@
 package marryus.studressmake.repository;
 
-import marryus.studressmake.ChatSession;
-import marryus.studressmake.Counselor;
+import marryus.studressmake.entity.ChatSession;
+import marryus.studressmake.entity.Counselor;
 import marryus.studressmake.SessionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 

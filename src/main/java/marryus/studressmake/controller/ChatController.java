@@ -1,10 +1,10 @@
 package marryus.studressmake.controller;
 
 import lombok.RequiredArgsConstructor;
-import marryus.studressmake.ChatMessageDTO;
-import marryus.studressmake.ChatResponse;
-import marryus.studressmake.ChatSession;
-import marryus.studressmake.NoAvailableCounselorException;
+import marryus.studressmake.entity.ChatMessageDTO;
+import marryus.studressmake.entity.ChatResponse;
+import marryus.studressmake.entity.ChatSession;
+import marryus.studressmake.exception.NoAvailableCounselorException;
 import marryus.studressmake.service.ChatService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;

@@ -1,4 +1,4 @@
-package marryus.studressmake;
+package marryus.studressmake.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

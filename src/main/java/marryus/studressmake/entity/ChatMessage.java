@@ -1,6 +1,7 @@
-package marryus.studressmake;
+package marryus.studressmake.entity;
 
 import lombok.*;
+import marryus.studressmake.MessageType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

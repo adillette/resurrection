@@ -1,4 +1,4 @@
-package marryus.studressmake;
+package marryus.studressmake.entity;
 
 import lombok.*;
 

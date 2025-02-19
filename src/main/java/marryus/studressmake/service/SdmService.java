@@ -19,9 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-
 @Service
 @Slf4j
 @Builder
@@ -29,28 +26,14 @@ import java.time.LocalDateTime;
 public class SdmService {
 
     private final SdmRepository sdmRepository;
-    private final FileService fileService;
+    private final SdmImageService imageService;
 
     @Transactional
-    public Long register(SdmDTO sdmDTO, List<MultipartFile> files){
-        //dto를 엔티티로 변환
-        Sdm sdm = dtoToEntity(sdmDTO);
+    public Long register(SdmDTO sdmDTO){
 
-        //기본 정보 저장
-        sdm.setCreateAt((LocalDateTime.now()));
-        Sdm savedSdm =  sdmRepository.save(sdm);
+        // Sdm 저장만 수행
+        return sdmRepository.save(sdmDTO.toEntity()).getId();
 
-        //이미지 파일 처리
-        if(files !=null && !files.isEmpty()){
-            files.forEach(file->{
-                try{
-                    fileService.saveFile(savedSdm.getId(), file);
-                } catch (IOException e) {
-                    throw new RuntimeException("파일 저장중 오류발생했습니다.",e);
-                }
-            });
-        }
-        return savedSdm.getId();
     }
 
     @Transactional
@@ -63,16 +46,8 @@ public class SdmService {
 
         //새로운 이미지 파일이 있다면 처리
         if(newFiles !=null && !newFiles.isEmpty()){
-            fileService.deleteAllFiles(id);
-
-            //새파일 저장
-            newFiles.forEach(file->{
-                try{
-                    fileService.saveFile(id, file);
-                } catch (IOException e) {
-                    throw new RuntimeException("파일 저장중 오류가 발생했습니다.",e);
-                }
-            });
+            imageService.deleteImages(id);// 기존 이미지 삭제
+            imageService.saveImages(id, newFiles);//새이미지 생성
         }
 
     }
@@ -80,10 +55,9 @@ public class SdmService {
     @Transactional
     public void remove(Long id){
         //이미지 파일 먼저 삭제
-        fileService.deleteAllFiles(id);
+       imageService.deleteImages(id);
+       sdmRepository.deleteById(id);
 
-        //게시물 삭제
-        sdmRepository.deleteById(id);
     }
 
     /**

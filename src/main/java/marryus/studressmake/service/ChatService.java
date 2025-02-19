@@ -109,5 +109,29 @@ public class ChatService {
         chatSessionRepository.save(session);
         counselorRepository.save(counselor);
     }
+    // 상담원 등록/상태 변경
+    public void registerCounselor(String counselorId) {
+        log.info("상담원 등록/상태 변경 - counselorId: {}", counselorId);
 
+        Counselor counselor = counselorRepository.findById(counselorId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상담원입니다."));
+
+        // 상담원 상태를 AVAILABLE로 변경
+        counselor.setStatus(CounselorStatus.AVAILABLE);
+        counselorRepository.save(counselor);
+
+        log.info("상담원 상태 변경 완료: id={}, status={}", counselorId, CounselorStatus.AVAILABLE);
+    }
+
+    // 세션 조회
+    public ChatSession getSession(String sessionId) {
+        log.info("채팅 세션 조회 - sessionId: {}", sessionId);
+
+        ChatSession session = chatSessionRepository.findById(Long.parseLong(sessionId))
+                .orElseThrow(() -> new SessionNotFoundException("세션을 찾을 수 없습니다."));
+
+        log.info("조회된 세션: {}", session);
+
+        return session;
+    }
 }

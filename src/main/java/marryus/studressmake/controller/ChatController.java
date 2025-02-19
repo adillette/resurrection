@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import marryus.studressmake.entity.ChatMessageDTO;
 import marryus.studressmake.entity.ChatResponse;
 import marryus.studressmake.entity.ChatSession;
+import marryus.studressmake.entity.Counselor;
 import marryus.studressmake.exception.NoAvailableCounselorException;
 import marryus.studressmake.service.ChatService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -41,6 +42,17 @@ public class ChatController {
                    .message("현재 모든 상담원이 상담중입니다. 잠시후 다시 시도해주세요.")
                    .build();
         }
+    }
+
+    @MessageMapping("/counselor.register")
+    public void registerCounselor(Counselor counselor) {
+        chatService.registerCounselor(counselor.getCounselorId());
+    }
+
+    @MessageMapping("/chat.assign")
+    @SendTo("/topic/counselor.sessions")
+    public ChatSession assignChat(String sessionId) {
+        return chatService.getSession(sessionId);
     }
     @MessageMapping("/chat.send")
     public void handleMessage(ChatMessageDTO message){

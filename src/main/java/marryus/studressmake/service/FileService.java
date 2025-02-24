@@ -25,17 +25,14 @@ public class FileService {
 
         String originalFilename = file.getOriginalFilename();
         String fileExtension = FilenameUtils.getExtension(originalFilename);
-        String savedFilename= UUID.randomUUID().toString()+ "." + fileExtension;
+        // sdmId를 파일명에 포함시켜 구분할 수 있게 함
+        String savedFilename = sdmId + "_" + UUID.randomUUID().toString() + "." + fileExtension;
 
-        //sdmId 별로 디렉토리 생성
-        String dirPath = uploadPath + File.separator + sdmId;
-        File directory = new File(dirPath);
-        if(!directory.exists()){
-            directory.mkdirs();
-        }
+        //파일을 uploadPath 에 직접 저장
+        File saveFile = new File(uploadPath + File.separator+ savedFilename);
 
-        //파일 저장
-        File savedFile = new File(dirPath+ File.separator + savedFilename );
+        // 파일을 uploadPath 직접 저장
+        File savedFile = new File(uploadPath + File.separator + savedFilename);
         file.transferTo(savedFile);
 
         log.info("파일 저장 File saved: "+ savedFile.getAbsolutePath());
@@ -43,17 +40,14 @@ public class FileService {
     }
 
     public void deleteAllFiles(Long sdmId){
-        String dirPath = uploadPath + File.separator + sdmId;
-        File directory = new File(dirPath);
 
-        if(directory.exists()){
-            File[] files = directory.listFiles();
-            if(files!=null){
-                for(File file:files){
-                    file.delete();
-                }
+        File directory = new File(uploadPath);
+        File[] files = directory.listFiles((dir,name)->name.startsWith(sdmId + "_"));
+
+        if (files != null) {
+            for (File file : files) {
+                file.delete();
             }
-            directory.delete();
         }
     }
 

@@ -2,10 +2,11 @@ package marryus.studressmake.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
+@Data
 @Entity
 @NoArgsConstructor
 public class SdmImage {

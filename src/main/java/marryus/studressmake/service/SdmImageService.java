@@ -3,19 +3,23 @@ package marryus.studressmake.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import marryus.studressmake.entity.SdmImage;
+import marryus.studressmake.entity.SdmImageDTO;
 import marryus.studressmake.repository.SdmImageRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class SdmImageService {
+
     private final SdmImageRepository imageRepository;
     private final FileService fileService;
 
@@ -55,5 +59,12 @@ public class SdmImageService {
 
         // 3. DB에서 이미지 정보 삭제
         imageRepository.deleteAllBySdmId(sdmId);
+    }
+
+    public List<String> getImagesBySdmId(Long sdmId) {
+        List<SdmImage> images = imageRepository.findBySdmId(sdmId);
+        return images.stream()
+                .map(SdmImage::getFileName)
+                .collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import marryus.studressmake.entity.SdmDTO;
+import marryus.studressmake.entity.SdmImageDTO;
 import marryus.studressmake.entity.SdmPageRequestDTO;
 import marryus.studressmake.entity.SdmPageResponseDTO;
 import marryus.studressmake.service.FileService;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
@@ -40,6 +42,9 @@ public class SdmController {
             @RequestPart("sdmData") String sdmData,
             @RequestPart("files") List<MultipartFile> files) {
         try {
+
+            log.info("Received sdmData: {}", sdmData);
+            log.info("Received files count: {}", files.size());
             // 1. Sdm 데이터 저장
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
@@ -62,6 +67,13 @@ public class SdmController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    /**
+     *
+     * @param sdmId
+     * @param files
+     * @return
+
     // 이미지 업로드를 위한 새로운 엔드포인트
     @PostMapping("/images/upload")
     public ResponseEntity<Map<String, String>> uploadImages(
@@ -79,7 +91,7 @@ public class SdmController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
+     */
     // 이미지 삭제를 위한 엔드포인트
     @DeleteMapping("/images/{sdmId}")
     public ResponseEntity<Map<String, String>> deleteImages(
@@ -146,8 +158,18 @@ public class SdmController {
     public ResponseEntity<SdmPageResponseDTO<SdmDTO>>
                                 list(SdmPageRequestDTO pageRequestDTO){
         try{
+            log.info("페이지 요청 정보: {}", pageRequestDTO);
+
             SdmPageResponseDTO<SdmDTO> result =
                     sdmService.getList(pageRequestDTO);
+
+
+            for(SdmDTO dto: result.getDtoList()){
+                //이미지 정보 조회 로직 추가 필요
+                List<String> fileNames = imageService.getImagesBySdmId(dto.getId());
+
+                dto.setUploadFileNames(fileNames);
+            }
             return new ResponseEntity<>(result, HttpStatus.OK);
 
         } catch (Exception e) {

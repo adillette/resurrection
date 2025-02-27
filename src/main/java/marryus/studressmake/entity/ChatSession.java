@@ -2,7 +2,6 @@ package marryus.studressmake.entity;
 
 import lombok.*;
 import marryus.studressmake.SessionStatus;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,10 +28,25 @@ public class ChatSession {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
+    private String counselorName;
+
     @Enumerated(EnumType.STRING)
     private SessionStatus sessionStatus;
 
     @Builder.Default
     @OneToMany(mappedBy = "chatSession", cascade = CascadeType.ALL)
     private List<ChatMessage> messages = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "ChatSession{" +
+                "sessionId=" + sessionId +
+                ", customerId='" + customerId + '\'' +
+                ", counselorId='" + (counselor != null ? counselor.getCounselorId() : "null") + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", sessionStatus=" + sessionStatus +
+                ", messagesCount=" + messages.size() +
+                '}';
+    }
 }

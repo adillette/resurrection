@@ -23,7 +23,7 @@ public class Counselor {
     @Column(name = "COUNSELOR_NAME", nullable = false)
     private String counselorName;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(value=EnumType.STRING)
     @Column(name = "STATUS", nullable = false) // nullable 추가
     private CounselorStatus status;
 

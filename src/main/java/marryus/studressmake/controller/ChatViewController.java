@@ -10,7 +10,7 @@ public class ChatViewController {
         return "customer-chat";  // customer-chat.html로 연결
     }
 
-    @GetMapping("/counselor/chat")
+    @GetMapping("/counselor/chat/{counselorId}")
     public String counselorChatPage() {
         return "counselor-chat";  // counselor-chat.html로 연결
     }

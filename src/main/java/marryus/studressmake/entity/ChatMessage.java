@@ -33,6 +33,18 @@ public class ChatMessage {
     private MessageType messageType;
     //
 
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "messageId=" + messageId +
+                ", sessionId=" + (chatSession != null ? chatSession.getSessionId() : "null") +
+                ", senderId='" + senderId + '\'' +
+                ", messageContent='" + messageContent + '\'' +
+                ", sendTime=" + sendTime +
+                ", messageType=" + messageType +
+                '}';
+    }
+
 
 
 }

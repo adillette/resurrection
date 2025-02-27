@@ -4,6 +4,8 @@ import marryus.studressmake.entity.ChatSession;
 import marryus.studressmake.entity.Counselor;
 import marryus.studressmake.SessionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,4 +26,14 @@ public interface ChatSessionRepository extends JpaRepository<ChatSession,Long> {
 
     // 특정 기간의 채팅세션 찾기
     List<ChatSession> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
+
+    List<ChatSession> findByCounselorAndSessionStatus(Counselor counselor, SessionStatus sessionStatus);
+
+    // Fetch 조인을 사용한 메서드 추가
+    @Query("SELECT cs FROM ChatSession cs JOIN FETCH cs.counselor c LEFT JOIN FETCH c.sessions WHERE c.counselorId = :counselorId AND cs.sessionStatus = :status")
+    List<ChatSession> findByCounselorIdAndStatusWithFetch(@Param("counselorId") String counselorId, @Param("status") SessionStatus status);
+
+    // 세션 ID로 fetch 조인 조회
+    @Query("SELECT cs FROM ChatSession cs JOIN FETCH cs.counselor c LEFT JOIN FETCH c.sessions WHERE cs.sessionId = :sessionId")
+    Optional<ChatSession> findByIdWithFetch(@Param("sessionId") Long sessionId);
 }

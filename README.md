@@ -134,9 +134,12 @@ CRUD 기능 구현
 18.  view 구현
 
 19.  ![Image](https://github.com/user-attachments/assets/7a375294-2c73-4a10-8ba6-770ad13a611f)
+20.  문제점 발견 상태에서 행동을 하려고 하니까 자꾸 일이 늘어난다.
 
-20.  화면 레이아웃 작성
+    상담원 상태 변경하는거 원래 안만들기로 했는데 만들려다가 시간 다 보냄
 
-21.  ![Image](https://github.com/user-attachments/assets/80217cd0-c020-4a9e-981d-83dc0da5c147)
+22.  화면 레이아웃 작성
 
-22.  사용자 인터페이스 구현
+23.  ![Image](https://github.com/user-attachments/assets/80217cd0-c020-4a9e-981d-83dc0da5c147)
+
+24.  사용자 인터페이스 구현

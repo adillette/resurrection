@@ -144,7 +144,7 @@ public class ChatService {
                 .collect(Collectors.toList());
     }
 
-    public void updateCounselorStatus(String counselorId, CounselorStatus status) {
+    public void updateCounselorStatus(String counselorId, String counselorName, CounselorStatus status) {
         // 상담원 ID로 상담원 조회
         Optional<Counselor> existingCounselor = counselorRepository.findById(counselorId);
 
@@ -152,11 +152,12 @@ public class ChatService {
             // 상담원 상태 업데이트
             Counselor counselor = existingCounselor.get();
             counselor.setStatus(status);
+            counselor.setCounselorName(counselorName);
             counselorRepository.save(counselor);
-            log.info("상담원 {} 상태가 {}로 업데이트되었습니다.", counselorId, status);
+            log.info("상담원 {} 상태가 {}로 업데이트되었습니다.: 담당자이름:{}", counselorId, status,counselorName);
         } else {
             // 상담원이 존재하지 않는 경우
-            log.error("상담원 {}을(를) 찾을 수 없습니다.", counselorId);
+            log.error("상담원 {}:{}을(를) 찾을 수 없습니다.", counselorId,counselorName);
         }
     }
 }

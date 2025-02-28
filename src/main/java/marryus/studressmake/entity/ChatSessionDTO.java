@@ -27,11 +27,13 @@ public class ChatSessionDTO {
         // 지연 로딩된 counselor에 안전하게 접근
         if (session.getCounselor() != null) {
             this.counselorId = session.getCounselor().getCounselorId();
+
+            this.counselorName = session.getCounselor().getCounselorName();
         }
 
         this.startTime = session.getStartTime();
         this.sessionStatus = session.getSessionStatus();
-        this.counselorName=session.getCounselorName();
+       // this.counselorName=session.getCounselorName();
 
     }
 }

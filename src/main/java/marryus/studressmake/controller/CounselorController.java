@@ -53,24 +53,26 @@ public class CounselorController {
     @MessageMapping("/counselor.updateStatus")
     public void updateCounselorStatus(Map<String, String> payload) {
         String counselorId = payload.get("counselorId");
+        String counselorName = payload.get("counselorName");
         String statusStr = payload.get("status");
 
-        System.out.println("상담원 상태 업데이트 요청: " + counselorId + ", 상태: " + statusStr);
+        System.out.println("상담원 상태 업데이트 요청: " +counselorName+",이름" +counselorId + ", 상태: " + statusStr);
 
         try {
             // 문자열을 대문자로 변환 후 Enum으로 변환
             CounselorStatus status = CounselorStatus.valueOf(statusStr.toUpperCase());
 
             // 서비스 호출
-            chatService.updateCounselorStatus(counselorId, status);
+            chatService.updateCounselorStatus(counselorId,counselorName,status );
 
             // 상태 변경을 다른 클라이언트에게 알림 (선택사항)
             Counselor updatedCounselor = new Counselor();
             updatedCounselor.setCounselorId(counselorId);
+            updatedCounselor.setCounselorName(counselorName);
             updatedCounselor.setStatus(status);
             messagingTemplate.convertAndSend("/topic/counselor.status", updatedCounselor);
 
-            System.out.println("상담원 상태 업데이트 성공: " + counselorId + ", 새 상태: " + status);
+            System.out.println("상담원 상태 업데이트 성공: " + counselorId + ", 이름: " + counselorName + ", 새 상태: " + status);
 
         } catch (IllegalArgumentException e) {
             System.err.println("잘못된 상담원 상태: " + statusStr);

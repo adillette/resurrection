@@ -77,7 +77,7 @@ public class ChatController {
     public void getCounselorSessions(@RequestBody Map<String, String> payload) {
         String counselorId = payload.get("counselorId");
         List<ChatSessionDTO> sessionDTOs = chatService.getSessionByCounselor(counselorId);
-log.info("counselorId 나오니?", counselorId);
+log.info("counselorId 나오니?{}", counselorId);
         for (ChatSessionDTO sessionDTO : sessionDTOs) {
             messagingTemplate.convertAndSend("/topic/counselor.sessions", sessionDTO);
         }
@@ -94,6 +94,7 @@ log.info("counselorId 나오니?", counselorId);
                 messageRequest.getSenderId(),
                 messageRequest.getContent()
         );
+        log.info("메시지 저장: {}", savedMessage);
 
         // 세션 정보 조회 (상담원 이름 가져오기 위해)
         ChatSession session = chatService.getSession(String.valueOf(messageRequest.getSessionId()));

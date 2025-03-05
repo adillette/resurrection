@@ -6,9 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class SdmImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,11 +22,17 @@ public class SdmImage {
     private String fileName;
     private String originalFileName;
 
-    @Builder
-    public SdmImage(Long sdmId, String fileName, String originalFileName) {
-        this.sdmId = sdmId;
-        this.fileName = fileName;
-        this.originalFileName = originalFileName;
+    private String fileType;
+
+    private Long fileSize;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
     }
+
+
 
 }

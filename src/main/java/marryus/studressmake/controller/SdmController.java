@@ -1,5 +1,6 @@
 package marryus.studressmake.controller;
 
+import org.springframework.core.io.Resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import marryus.studressmake.entity.SdmPageResponseDTO;
 import marryus.studressmake.service.FileService;
 import marryus.studressmake.service.SdmImageService;
 import marryus.studressmake.service.SdmService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,30 +70,8 @@ public class SdmController {
         }
     }
 
-    /**
-     *
-     * @param sdmId
-     * @param files
-     * @return
 
-    // 이미지 업로드를 위한 새로운 엔드포인트
-    @PostMapping("/images/upload")
-    public ResponseEntity<Map<String, String>> uploadImages(
-            @RequestParam("sdmId") Long sdmId,
-            @RequestParam("files") List<MultipartFile> files) {
-        try {
 
-            imageService.saveImages(sdmId, files);
-
-            Map<String, String> result = new HashMap<>();
-            result.put("result", "success");
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("이미지 업로드 중 오류 발생: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
-     */
     // 이미지 삭제를 위한 엔드포인트
     @DeleteMapping("/images/{sdmId}")
     public ResponseEntity<Map<String, String>> deleteImages(
@@ -150,15 +130,71 @@ public class SdmController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
     /**
-     * 목록 조회
+     * sdm의 아이디로 이미지 정보 조회하기
+     * @param pageRequestDTO
+     * @return
+     */
+    @GetMapping("/image/{sdmId}")
+    public ResponseEntity<List<SdmImageDTO>> getImagesBySdmId(@PathVariable Long sdmId){
+        try {
+            List<SdmImageDTO> images = imageService.getImageDetailsBySdmId(sdmId);
+
+            if(images.isEmpty()){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(images, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("이미지 조회 중 오류 발생: {}", sdmId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
+    }
+
+    /**
+     * 이미지 파일 조회 엔드포인트
+     */
+    @GetMapping("/view/{fileName}")
+    public ResponseEntity<Resource> getImage(@PathVariable String fileName) {
+        try {
+            Resource resource = imageService.loadImageAsResource(fileName);
+
+            // 파일 확장자에 따라 적절한 Content-Type 설정
+            String contentType = "image/jpeg"; // 기본값
+            String fileNameLower = fileName.toLowerCase();
+
+            if (fileNameLower.endsWith(".png")) {
+                contentType = "image/png";
+            } else if (fileNameLower.endsWith(".gif")) {
+                contentType = "image/gif";
+            } else if (fileNameLower.endsWith(".bmp")) {
+                contentType = "image/bmp";
+            } else if (fileNameLower.endsWith(".webp")) {
+                contentType = "image/webp";
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            log.error("이미지 로드 중 오류 발생: {}", fileName, e);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+    /**
+     * 목록 조회- 이미지 정보 포함
      *
      */
     @GetMapping("/list")
     public ResponseEntity<SdmPageResponseDTO<SdmDTO>>
                                 list(SdmPageRequestDTO pageRequestDTO){
         try{
-            log.info("페이지 요청 정보: {}", pageRequestDTO);
+            log.info("리스트페이지 요청 정보: {}", pageRequestDTO);
 
             SdmPageResponseDTO<SdmDTO> result =
                     sdmService.getList(pageRequestDTO);
@@ -169,6 +205,17 @@ public class SdmController {
                 List<String> fileNames = imageService.getImagesBySdmId(dto.getId());
 
                 dto.setUploadFileNames(fileNames);
+
+                //이미지 전체 경로 설정
+                List<SdmImageDTO> imageDetails= imageService.getImageDetailsBySdmId(dto.getId());
+                List<String> imagePaths = imageDetails.stream()
+                                .map(SdmImageDTO::getFullPath)
+                                        .collect(Collectors.toList());
+
+                dto.setImageUrls(imagePaths);
+                log.info("이미지 파일명: {}", fileNames);
+                log.info("이미지 경로: {}", imagePaths);
+                log.info("SDM ID: {}", dto.getId());
             }
             return new ResponseEntity<>(result, HttpStatus.OK);
 
@@ -186,11 +233,31 @@ public class SdmController {
     public ResponseEntity<SdmDTO> getOneList(@PathVariable Long id){
         try{
             SdmDTO result = sdmService.get(id);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+           if(result !=null){
+               //이미지 정보 조회 및 설정
+               List<String> fileNames = imageService.getImagesBySdmId(result.getId());
+
+               log.info("이미지 정보 조회 및 설정 fileNames:{}",fileNames);
+               result.setUploadFileNames(fileNames);
+
+               // 이미지 URL 설정 (프론트엔드에서 직접 사용 가능한 URL)
+               List<SdmImageDTO> imageDetails = imageService.getImageDetailsBySdmId(result.getId());
+               log.info("이미지 URL 설정 imageDetails:{}",imageDetails);
+
+               List<String> imagePaths = imageDetails.stream()
+                       .map(SdmImageDTO::getFullPath)
+                       .collect(Collectors.toList());
+
+               result.setImageUrls(imagePaths);
+               return new ResponseEntity<>(result, HttpStatus.OK);
+           }else{
+               return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+           }
+
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
-            log.error("조회 중 오류 발생: ", e);
+            log.error("상세창 조회 중 오류 발생: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 

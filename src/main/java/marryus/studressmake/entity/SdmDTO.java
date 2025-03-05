@@ -31,6 +31,7 @@ public class SdmDTO {
     // 파일 관련 필드
     private List<MultipartFile> files;  // 업로드할 파일들
     private List<String> uploadFileNames;  // 저장된 파일 이름들
+    private List<String> imageUrls;
 
     // DTO -> Entity 변환
     public Sdm toEntity() {
@@ -64,5 +65,8 @@ public class SdmDTO {
                 .closeTime(entity.getCloseTime())
                 .category(entity.getCategory())
                 .build();
+    }
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls= imageUrls;
     }
 }

@@ -18,7 +18,7 @@ public interface ChatSessionRepository extends JpaRepository<ChatSession,Long> {
     // counselorId 대신 counselor로 찾기
     List<ChatSession> findByCounselor(Counselor counselor);
 
-    // 진행중인 상담 찾기
+    // 진행중인 상담 찾기 optional을 사용허는 이유? findbyCustomerIdAndSessionStatus로 호출한 값이 존재할수도 있고 존재하지 않을수 있어서
     Optional<ChatSession> findByCustomerIdAndSessionStatus(String customerId, SessionStatus status);
 
     // 특정상태의 채팅 세션 모두 찾기
@@ -30,10 +30,13 @@ public interface ChatSessionRepository extends JpaRepository<ChatSession,Long> {
     List<ChatSession> findByCounselorAndSessionStatus(Counselor counselor, SessionStatus sessionStatus);
 
     // Fetch 조인을 사용한 메서드 추가
-    @Query("SELECT cs FROM ChatSession cs JOIN FETCH cs.counselor c LEFT JOIN FETCH c.sessions WHERE c.counselorId = :counselorId AND cs.sessionStatus = :status")
-    List<ChatSession> findByCounselorIdAndStatusWithFetch(@Param("counselorId") String counselorId, @Param("status") SessionStatus status);
+    @Query("SELECT cs FROM ChatSession cs JOIN FETCH cs.counselor c LEFT JOIN FETCH c.sessions " +
+                                    "WHERE c.counselorId = :counselorId AND cs.sessionStatus = :status")
+    List<ChatSession> findByCounselorIdAndStatusWithFetch
+                        (@Param("counselorId") String counselorId, @Param("status") SessionStatus status);
 
     // 세션 ID로 fetch 조인 조회
-    @Query("SELECT cs FROM ChatSession cs JOIN FETCH cs.counselor c LEFT JOIN FETCH c.sessions WHERE cs.sessionId = :sessionId")
+    @Query("SELECT cs FROM ChatSession cs JOIN FETCH cs.counselor c " +
+                   "LEFT JOIN FETCH c.sessions WHERE cs.sessionId = :sessionId")
     Optional<ChatSession> findByIdWithFetch(@Param("sessionId") Long sessionId);
 }

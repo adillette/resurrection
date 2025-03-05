@@ -1,5 +1,6 @@
 package marryus.studressmake.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Counselor {
     @Column(name = "STATUS", nullable = false) // nullable 추가
     private CounselorStatus status;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "counselor", cascade = CascadeType.ALL) // cascade 추가
     private List<ChatSession> sessions = new ArrayList<>();
 

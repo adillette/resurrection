@@ -33,9 +33,13 @@ public class ChatSessionService {
     }
 
     @Transactional(readOnly = true)
-    public ChatSession getSessionById(Long sessionId) {
-        return chatSessionRepository.findByIdWithFetch(sessionId)
-                .orElseThrow(() -> new RuntimeException("채팅 세션을 찾을 수 없습니다: " + sessionId));
+    public ChatSessionDTO getSessionById(Long sessionId) {
+
+        ChatSession session = chatSessionRepository.findByIdWithFetch(sessionId)
+                .orElseThrow(()-> new RuntimeException("채팅 세션을 찾을수 없습니다."));
+
+        return convertToDTO(session);
+
     }
 
     private ChatSessionDTO convertToDTO(ChatSession session) {

@@ -14,4 +14,7 @@ public class SdmImageDTO {
     private Long sdmId;
     private String fileName;
     private String originalFileName;
+    private String fileType;
+    private Long fileSize;
+    private String fullPath;
 }

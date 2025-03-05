@@ -21,9 +21,9 @@
 WebSocket, Stomp.Js, Spring-Boot , Oracle, Spring Data Jpa
 
 
-
 ## 25/01/21 요구사항 분석, DB 설계 ERD 작성
-![Image](https://github.com/user-attachments/assets/b9f7a8ec-2627-4675-a29d-7f0dd247566f)
+![Image](https://github.com/user-attachments/assets/fc7452bc-65af-4771-b9ec-79e29261b748)
+
 ### [1] 요구사항 분석
 ----
 -게시판에 필요한 기능 정리
@@ -84,50 +84,62 @@ CRUD 기능 구현
 
 2.  ERD 작성
 3.  
-![Image](https://github.com/user-attachments/assets/a0e04253-2a52-4e24-8a4e-3760951caa0d)
+![Image](https://github.com/user-attachments/assets/fc7452bc-65af-4771-b9ec-79e29261b748)
+4.  테이블 구조 설계- 25.03.05 수정정
+COUNSELOR {
+        string counselorId PK
+        string counselorName
+        CounselorStatus status
+    }
 
-4.  테이블 구조 설계
-   ChatSession {
-
+    CHAT_SESSION {
         Long sessionId PK
-    
-        String customerId
-    
-        String counselorId FK
-    
-        DateTime startTime
-    
-        DateTime endTime
-    
-        String sessionStatus
-    
+        string customerId
+        string counselorId FK
+        LocalDateTime startTime
+        LocalDateTime endTime
+        string counselorName
+        SessionStatus sessionStatus
     }
 
-    
-    ChatMessage {
-    
+    CHAT_MESSAGE {
         Long messageId PK
-    
         Long sessionId FK
-    
-        String senderId
-    
-        String messageContent
-    
-        DateTime sendTime
-    
-        String messageType
-    
+        string senderId
+        string messageContent
+        LocalDateTime sendTime
+        MessageType messageType
     }
-    
-    Counselor {
-    
-        String counselorId PK
-    
-        String counselorName
-    
-        String status
-    
+
+    SDM {
+        Long id PK
+        string itemName
+        string shopName
+        string address
+        string phoneNumber
+        string description
+        int price
+        LocalDateTime createAt
+        LocalTime openTime
+        LocalTime closeTime
+        ShopCategory category
+    }
+
+    SDM_IMAGE {
+        Long id PK
+        Long sdmId FK
+        string fileName
+        string originalFileName
+        string fileType
+        Long fileSize
+        LocalDateTime createdAt
+    }
+
+    CHAT_RESPONSE {
+        string type
+        Long sessionId FK
+        string counselorName
+        string message
     }
 6.  도메인 객체(Entity) 설계
 -2/6 오후 완료

@@ -1,7 +1,43 @@
 # 다시 만드는 첫번째 파이널 프로젝트
 ![Image](https://github.com/user-attachments/assets/37384ed3-d396-4c10-b184-4d30e85b0910)
+
+## 왜 다시 만드는가?
+
+파이널 프로젝트 당시 부족한 Spring 실력과 코드의 중복, 난해한 메서드의 사용으로 코드 가독성 및 코드 재사용성 저하되어있었음.
+
+다른 팀원과 코드 리뷰를 하면서 가독성이 너무 떨어져서 이해가 어렵다는 피드백을 받아서... 국비학원 수료 후 김영한님 인강과 함께
+
+죽어버린 코드에 Resurrection(부활)을 주기로 했음.
+
+## 왜 채팅 프로그램인가? 
+
+이전 회사에서 고객과 온라인 상담 프로그램으로 제품 상담을 했을때 업무 분담 및 책임이 제대로 이루어지지 않아서 힘들었던 경험이 있어서 
+
+이를 해결할수 있는 프로그램을 만들고 싶었음. 
+
+프로젝트 기간에는 게시판이 너무 늦어져서 못 만들었으나 취준 중에 다시 만들고 싶어서 만들었음.
+
+## 사용기술
+WebSocket, Stomp.Js, Spring-Boot , Oracle, Spring Data Jpa
+
+## 아키텍처 선정기준
+
+▶WebSocket 
+①화면 갱신 없이 실시간성을 요구하는 채팅 프로그램 같은 어플리케이션을 만드는데 용이합니다. 
+ ②클라이언트가 서버에 따로 요구하지 않아도 양방향 통신이 가능합니다.
+ ③웹 환경에서 연속된 데이터를 노출하기 쉽습니다.
+
+▶Stomp.js
+ ①Spring에서 stomp를 지원해 주기 때문에 통합하기 쉬웠습니다.
+ ② 메시지 구조화를 이용하여 시간 순서에 따른 이력관리를 할 수 있었습니다.
+
+▶Oracle :고객 정보 및 상담사 정보, 상담이력의 데이터 관계를 명확이 정의 하고 관리하기 위해 선택했습니다![image](https://github.com/user-attachments/assets/7f3e530c-19cf-4489-96da-38305a862089)
+
+
+
 ## 25/01/21 요구사항 분석, DB 설계 ERD 작성
-![Image](https://github.com/user-attachments/assets/b9f7a8ec-2627-4675-a29d-7f0dd247566f)
+![Image](https://github.com/user-attachments/assets/fc7452bc-65af-4771-b9ec-79e29261b748)
+
 ### [1] 요구사항 분석
 ----
 -게시판에 필요한 기능 정리
@@ -62,50 +98,62 @@ CRUD 기능 구현
 
 2.  ERD 작성
 3.  
-![Image](https://github.com/user-attachments/assets/a0e04253-2a52-4e24-8a4e-3760951caa0d)
+![Image](https://github.com/user-attachments/assets/fc7452bc-65af-4771-b9ec-79e29261b748)
+4.  테이블 구조 설계- 25.03.05 수정정
+COUNSELOR {
+        string counselorId PK
+        string counselorName
+        CounselorStatus status
+    }
 
-4.  테이블 구조 설계
-   ChatSession {
-
+    CHAT_SESSION {
         Long sessionId PK
-    
-        String customerId
-    
-        String counselorId FK
-    
-        DateTime startTime
-    
-        DateTime endTime
-    
-        String sessionStatus
-    
+        string customerId
+        string counselorId FK
+        LocalDateTime startTime
+        LocalDateTime endTime
+        string counselorName
+        SessionStatus sessionStatus
     }
 
-    
-    ChatMessage {
-    
+    CHAT_MESSAGE {
         Long messageId PK
-    
         Long sessionId FK
-    
-        String senderId
-    
-        String messageContent
-    
-        DateTime sendTime
-    
-        String messageType
-    
+        string senderId
+        string messageContent
+        LocalDateTime sendTime
+        MessageType messageType
     }
-    
-    Counselor {
-    
-        String counselorId PK
-    
-        String counselorName
-    
-        String status
-    
+
+    SDM {
+        Long id PK
+        string itemName
+        string shopName
+        string address
+        string phoneNumber
+        string description
+        int price
+        LocalDateTime createAt
+        LocalTime openTime
+        LocalTime closeTime
+        ShopCategory category
+    }
+
+    SDM_IMAGE {
+        Long id PK
+        Long sdmId FK
+        string fileName
+        string originalFileName
+        string fileType
+        Long fileSize
+        LocalDateTime createdAt
+    }
+
+    CHAT_RESPONSE {
+        string type
+        Long sessionId FK
+        string counselorName
+        string message
     }
 6.  도메인 객체(Entity) 설계
 -2/6 오후 완료

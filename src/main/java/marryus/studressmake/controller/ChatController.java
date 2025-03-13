@@ -2,6 +2,7 @@ package marryus.studressmake.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import marryus.studressmake.CounselorStatus;
 import marryus.studressmake.entity.*;
 import marryus.studressmake.exception.NoAvailableCounselorException;
 import marryus.studressmake.service.ChatService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.Map;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,20 +33,30 @@ public class ChatController {
     @MessageMapping("/chat.start")
     @SendTo("/topic/chat.connect")
     public ChatResponse startChat(@Payload Map<String,String> payload) {
-
         log.info("채팅 시작 요청 수신: {}", payload);
         String customerId = payload.get("customerId");
         log.info("추출된 customerId: {}", customerId);
+
+        if (customerId == null || customerId.isEmpty()) {
+            log.error("고객 ID가 없음");
+            return ChatResponse.builder()
+                    .type("ERROR")
+                    .message("고객 ID가 필요합니다.")
+                    .build();
+        }
+
         try {
             //채팅방 생성 및 상담원 배정
             ChatSession session = chatService.createChatSession(customerId);
-            log.info("customerid 들어왔냐?{}",customerId);
-            //새 세션을 해당 상담원에게 알림(이부분 추가)
-            log.info("상담원에게 세션 알림 전송");
-            messagingTemplate.convertAndSend("/topic/counselor.sessions", session);
-            log.info("채팅 세션 생성 성공: {}", session);
+            log.info("chat.start 1입니다.customerid 들어왔냐?{}", customerId);
+            //** 수정: 새 세션인 경우에만 상담원에게 알림
+            if (session.getStartTime().plusSeconds(5).isAfter(LocalDateTime.now())) {
+                log.info("상담원에게 세션 알림 전송");
+                messagingTemplate.convertAndSend("/topic/counselor.sessions", session);
+            }
+            log.info("chat.start 2입니다.채팅 세션 생성 성공: {}", session);
             // 상담 시작 메시지 전송
-            log.info("채팅 연결 응답 전송: 성공");
+
             return ChatResponse.builder()
                     .type("CONNECT")
                     .sessionId(session.getSessionId())
@@ -105,6 +117,8 @@ log.info("counselorId 나오니?{}", counselorId);
                 .sessionId(messageRequest.getSessionId())
                 .counselorName(session.getCounselor().getCounselorName())  // 상담원 이름
                 .message(messageRequest.getContent())
+                .senderId(messageRequest.getSenderId())
+                .timestamp(System.currentTimeMillis())
                 .build();
 
         // 메시지 전송
@@ -113,8 +127,7 @@ log.info("counselorId 나오니?{}", counselorId);
                 response
         );
 
-        log.info("메시지 전송 완료: 세션ID={}, 발신자={}", messageRequest.getSessionId(), messageRequest.getSenderId());
-    }
+        log.info("메시지 전송 완료: 세션ID={}, 발신자={}", messageRequest.getSessionId(), messageRequest.getSenderId());    }
 
     @MessageMapping("/chat.end")
     public void endChat(@Payload Map<String, Long> payload) {
@@ -138,7 +151,8 @@ log.info("counselorId 나오니?{}", counselorId);
             log.info("채팅 종료 처리 시작: 세션ID={}", sessionId);
 
             // 세션 종료 처리
-            chatService.endChatSession(sessionId);
+            // ** 수정 1: void 반환에서 ChatSession 반환으로 변경됨
+            ChatSession endedSession = chatService.endChatSession(sessionId);
 
             // 종료 메시지 전송
             ChatResponse response = ChatResponse.builder()
@@ -151,6 +165,17 @@ log.info("counselorId 나오니?{}", counselorId);
             messagingTemplate.convertAndSend("/topic/chat." + sessionId, response);
 
             log.info("채팅 종료 완료: 세션ID={}", sessionId);
+
+            // ** 수정 2: 추가된 부분 - 상담원 상태 변경 알림 전송
+            if (endedSession != null && endedSession.getCounselor() != null) {
+                Counselor counselor = endedSession.getCounselor();
+                messagingTemplate.convertAndSend("/topic/counselor.status",
+                        new CounselorStatusDTO(
+                                counselor.getCounselorId(),
+                                counselor.getCounselorName(),
+                                CounselorStatus.AVAILABLE.name()
+                        ));
+            }
         } catch (Exception e) {
             log.error("채팅 종료 처리 중 오류 발생", e);
         }

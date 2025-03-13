@@ -34,32 +34,54 @@ public class ChatService {
     private final CounselorRepository counselorRepository;
     private final ChatMessageRepository chatMessageRepository;
 
-    //채팅방 생성 및 상담원 배정
     public ChatSession createChatSession(String customerId) {
         log.info("상담 시작 - customerId: {}", customerId);
 
+        // 이미 활성화된 세션이 있는지 확인 (고객 기준)
+        Optional<ChatSession> existingSession = chatSessionRepository.findByCustomerIdAndSessionStatus(
+                customerId, SessionStatus.ACTIVE);
 
-        //가용 상담원 찾기
-        Counselor counselor = counselorRepository.findByStatus(CounselorStatus.AVAILABLE.name())
-                .stream()
-                .sorted(Comparator.comparing(Counselor::getCounselorId))
+        if (existingSession.isPresent()) {
+            log.info("이미 활성화된 세션이 존재합니다: {}", existingSession.get());
+            return existingSession.get();
+        }
+
+        // ** 수정: 가용 상담원 찾기 (상담원 ID 기준 정렬이 아닌 활성 세션이 없는 상담원 필터링)
+        List<Counselor> availableCounselors = counselorRepository.findByStatus(CounselorStatus.AVAILABLE.name());
+
+        if (availableCounselors.isEmpty()) {
+            throw new NoAvailableCounselorException("상담원이 모두 상담중입니다.");
+        }
+
+        // ** 수정: 활성 세션이 없는 상담원만 선택 (기존에는 첫 번째 가용 상담원 선택)
+        Counselor selectedCounselor = availableCounselors.stream()
+                .filter(counselor -> {
+                    long activeSessions = chatSessionRepository.countByCounselorAndSessionStatus(
+                            counselor, SessionStatus.ACTIVE);
+                    return activeSessions == 0; // ** 수정: 활성 세션이 없는 상담원만 선택
+                })
                 .findFirst()
-                .orElseThrow(() -> new NoAvailableCounselorException("상담원이 모두 상담중입니다."));
+                .orElseThrow(() -> new NoAvailableCounselorException("모든 상담원이 이미 다른 고객과 상담 중입니다."));
+
         // 디버깅용 로그
-        log.info("배정된 상담원: id={}, name={}", counselor.getCounselorId(), counselor.getCounselorName());
-        //채팅방 생성
+        log.info("배정된 상담원: id={}, name={}",
+                selectedCounselor.getCounselorId(),
+                selectedCounselor.getCounselorName());
+
+        // 채팅방 생성
         ChatSession session = ChatSession.builder()
                 .customerId(customerId)
-                .counselor(counselor)
+                .counselor(selectedCounselor)
                 .startTime(LocalDateTime.now())
                 .sessionStatus(SessionStatus.ACTIVE)
                 .build();
 
         log.info("생성된 세션: {}", session);
 
-        //상담원 상태 변경
-        counselor.setStatus(CounselorStatus.BUSY);
-        counselorRepository.save(counselor);
+        // ** 수정: 상담원 상태를 BUSY로 변경 (이전에는 활성 세션 수 확인 후 결정했으나,
+        // ** 1:1 채팅에서는 무조건 BUSY로 변경)
+        selectedCounselor.setStatus(CounselorStatus.BUSY);
+        counselorRepository.save(selectedCounselor);
 
         return chatSessionRepository.save(session);
     }
@@ -82,7 +104,7 @@ public class ChatService {
     }
 
     //상담종료
-    public void endChatSession(Long sessionId) {
+    public ChatSession endChatSession(Long sessionId) {
         ChatSession session = chatSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new SessionNotFoundException("세션을 찾을수 없습니다."));
 
@@ -92,8 +114,10 @@ public class ChatService {
         Counselor counselor = session.getCounselor();
         counselor.setStatus(CounselorStatus.AVAILABLE);
 
-        chatSessionRepository.save(session);
         counselorRepository.save(counselor);
+        chatSessionRepository.save(session);
+
+        return session;  // 세션 객체 반환 추가
     }
 
     // 상담원 등록/상태 변경

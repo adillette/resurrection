@@ -39,4 +39,6 @@ public interface ChatSessionRepository extends JpaRepository<ChatSession,Long> {
     @Query("SELECT cs FROM ChatSession cs JOIN FETCH cs.counselor c " +
                    "LEFT JOIN FETCH c.sessions WHERE cs.sessionId = :sessionId")
     Optional<ChatSession> findByIdWithFetch(@Param("sessionId") Long sessionId);
+
+    int countByCounselorAndSessionStatus(Counselor counselor, SessionStatus sessionStatus);
 }

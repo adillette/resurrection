@@ -13,6 +13,7 @@ import marryus.studressmake.entity.SdmPageResponseDTO;
 import marryus.studressmake.repository.SdmRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -83,6 +84,22 @@ public class SdmService {
         Sdm sdm = sdmRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("해당 게시물을 찾을수 없습니다."));
 
         return entityToDTO(sdm);
+    }
+
+
+    /**
+     * 검색어 조회
+     * @param sdmDTO
+     * @return
+     */
+
+    public SdmDTO search(String itemName){
+        return new Specification<>(){
+            private static final long serialVersionUID=1L;
+
+
+        }
+
     }
     private Sdm dtoToEntity(SdmDTO sdmDTO) {
         return Sdm.builder()

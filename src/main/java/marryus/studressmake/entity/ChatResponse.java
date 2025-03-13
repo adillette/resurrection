@@ -13,7 +13,8 @@ public class ChatResponse {
     private Long sessionId;
     private String counselorName;
     private String message;
-
+    private String senderId;    // 추가
+    private Long timestamp;
 
 
 }

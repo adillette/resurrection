@@ -20,6 +20,20 @@
 ## 사용기술
 WebSocket, Stomp.Js, Spring-Boot , Oracle, Spring Data Jpa
 
+## 아키텍처 선정기준
+
+▶WebSocket 
+①화면 갱신 없이 실시간성을 요구하는 채팅 프로그램 같은 어플리케이션을 만드는데 용이합니다. 
+ ②클라이언트가 서버에 따로 요구하지 않아도 양방향 통신이 가능합니다.
+ ③웹 환경에서 연속된 데이터를 노출하기 쉽습니다.
+
+▶Stomp.js
+ ①Spring에서 stomp를 지원해 주기 때문에 통합하기 쉬웠습니다.
+ ② 메시지 구조화를 이용하여 시간 순서에 따른 이력관리를 할 수 있었습니다.
+
+▶Oracle :고객 정보 및 상담사 정보, 상담이력의 데이터 관계를 명확이 정의 하고 관리하기 위해 선택했습니다![image](https://github.com/user-attachments/assets/7f3e530c-19cf-4489-96da-38305a862089)
+
+
 
 ## 25/01/21 요구사항 분석, DB 설계 ERD 작성
 ![Image](https://github.com/user-attachments/assets/fc7452bc-65af-4771-b9ec-79e29261b748)

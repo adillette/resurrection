@@ -264,5 +264,13 @@ public class SdmController {
     }
 
 
+    /**
+     * 가게 이름으로 검색하기
+     */
+    @GetMapping("/search/itemName")
+    public SdmPageResponseDTO<SdmDTO> searchByItemName(@RequestParam String itemName, SdmPageRequestDTO pageRequestDTO){
+        itemName = itemName.trim().replace("[\\s]","");
+        return sdmService.searchByItemName(itemName,pageRequestDTO);
+    }
 
 }

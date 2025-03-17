@@ -12,7 +12,9 @@ import marryus.studressmake.entity.SdmPageRequestDTO;
 import marryus.studressmake.entity.SdmPageResponseDTO;
 import marryus.studressmake.repository.SdmRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +93,7 @@ public class SdmService {
      * 검색어 조회
      * @param sdmDTO
      * @return
-     */
+
 
     public SdmDTO search(String itemName){
         return new Specification<>(){
@@ -101,6 +103,7 @@ public class SdmService {
         }
 
     }
+     */
     private Sdm dtoToEntity(SdmDTO sdmDTO) {
         return Sdm.builder()
                 .itemName(sdmDTO.getItemName())
@@ -143,4 +146,20 @@ public class SdmService {
         entity.setCategory(dto.getCategory());
     }
 
+    public SdmPageResponseDTO<SdmDTO> searchByItemName(String itemName, SdmPageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(), Sort.by("id").descending());
+
+        itemName = itemName.trim().replaceAll("[\\s]", "");
+
+        Page<Sdm> entityPage = sdmRepository.searchByItemName(itemName, pageable);
+
+        // 엔티티를 DTO로 변환
+        List<SdmDTO> dtoList = entityPage.getContent().stream()
+                .map(this::entityToDTO)
+                .collect(Collectors.toList());
+
+        return SdmPageResponseDTO.of(
+                dtoList, pageRequestDTO, entityPage.getTotalElements()
+        );
+    }
 }

@@ -191,3 +191,5 @@ COUNSELOR {
 23.  ![Image](https://github.com/user-attachments/assets/80217cd0-c020-4a9e-981d-83dc0da5c147)
 
 24.  사용자 인터페이스 구현
+
+25.  ## 직면한 문제 3/17 customerid의 중복으로 세션이 중복되어 에러 발생 로그인 통해서 customerid를 변경시켜주기로함

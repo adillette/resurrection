@@ -90,6 +90,9 @@ public class CounselorService {
      * 상담원 로그아웃 처리(상태를 offline 으로 변경)
      *
      */
+    /**
+     * 상담 요청 큐 관리 서비스
+     */
 
 
 

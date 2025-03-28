@@ -4,10 +4,7 @@ import lombok.*;
 import marryus.studressmake.ShopCategory;
 
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -33,6 +30,8 @@ public class Sdm {
     private LocalDateTime createAt;
     private LocalTime openTime;
     private LocalTime closeTime;
+
+    @Enumerated(EnumType.STRING)
     private ShopCategory category;
 
     @Override

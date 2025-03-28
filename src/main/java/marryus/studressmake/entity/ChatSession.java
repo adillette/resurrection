@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatSession {
+
     @Id
     @Column(name = "SESSION_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

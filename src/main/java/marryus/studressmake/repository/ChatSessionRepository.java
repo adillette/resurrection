@@ -41,4 +41,9 @@ public interface ChatSessionRepository extends JpaRepository<ChatSession,Long> {
     Optional<ChatSession> findByIdWithFetch(@Param("sessionId") Long sessionId);
 
     int countByCounselorAndSessionStatus(Counselor counselor, SessionStatus sessionStatus);
+
+    //test용
+   // int countByCounselorAndSessionStatus(Counselor any, SessionStatus any1);
+
+
 }

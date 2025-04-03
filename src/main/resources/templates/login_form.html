@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+<div>
+    <div>
+
+        <h4>회원 가입</h4>
+
+    </div>
+    <form th:action="@{/member/signup}" th:object="${joinForm}" method="post">
+        <div>
+            <div>
+                <label >membername</label>
+                <input type="text" th:field="*{membername}" >
+            </div>
+            <div>
+                <label>password</label>
+                <input type="password" th:field="*{password1}" >
+            </div>
+            <div>
+                <label>비밀번호 확인</label>
+                <input type="password" th:field="*{password2}" >
+            </div>
+            <div>
+                <label>email</label>
+                <input type="email" th:field="*{email}">
+            </div>
+            <button type="submit">회원 가입</button>
+        </div>
+
+
+
+    </form>
+</div>
+
+</body>
+</html>
